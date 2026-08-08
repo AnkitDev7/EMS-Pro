@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# React / Node
+node_modules/
+dist/
+build/
+.env
+.env.*
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
