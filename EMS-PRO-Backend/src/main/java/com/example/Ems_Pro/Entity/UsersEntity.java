@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "`user`")
-public class Users {
+public class UsersEntity {
 
     @Id
     @Column(name = "user_Id")
@@ -22,27 +22,27 @@ public class Users {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_Id",nullable = false)
-    private Role role;
+    private RoleEntity role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_Id")
-    private Company company;
+    private CompanyEntity company;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_Id")
-    private Location location;
+    private LocationEntity location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_Id")
-    private Department department;
+    private DepartmentEntity department;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_Id")
-    private Users manager;
+    private UsersEntity manager;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_leader_Id")
-    private Users teamLeader;
+    private UsersEntity teamLeader;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

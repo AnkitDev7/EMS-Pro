@@ -1,5 +1,6 @@
 package com.example.Ems_Pro.Service;
-import com.example.Ems_Pro.Entity.Users;
+import com.example.Ems_Pro.Entity.UsersEntity;
+import com.example.Ems_Pro.Repository.CompanyRepositry;
 import com.example.Ems_Pro.Repository.UserRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -18,9 +19,9 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
 
-        Optional<Users> byUserEmail = userRepositry.findByEmail(userEmail);
+        Optional<UsersEntity> byUserEmail = userRepositry.findByEmail(userEmail);
 
-        Users user = null;
+        UsersEntity user = null;
 
         if (byUserEmail.isPresent()){
             user = byUserEmail.get();

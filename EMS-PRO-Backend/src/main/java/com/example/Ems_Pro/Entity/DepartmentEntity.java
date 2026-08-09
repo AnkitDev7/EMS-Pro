@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department {
+@Table(name = "department")
+public class DepartmentEntity {
 
     @Id
     @Column(name = "department_Id",nullable = false, unique = true)
@@ -20,11 +21,11 @@ public class Department {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_Id", nullable = false)
-    private Company company;
+    private CompanyEntity company;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_Id", nullable = false)
-    private Location location;
+    private LocationEntity location;
 
     @Column(nullable = false)
     private Boolean active = true;
