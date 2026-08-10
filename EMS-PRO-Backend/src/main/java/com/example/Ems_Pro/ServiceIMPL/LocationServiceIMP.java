@@ -9,7 +9,9 @@ import com.example.Ems_Pro.Service.LocationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,4 +51,52 @@ public class LocationServiceIMP implements LocationService {
             throw new RuntimeException("Company not found");
         }
     }
+
+    @PutMapping("/{id}")
+    @Override
+    public LocationEntity updateLocationDetails(long id, LocationPayload locationPayload) {
+
+        Optional<LocationEntity> optionalLocation =
+                locationRepositry.findById(id);
+
+        if (optionalLocation.isEmpty()) {
+            return null;
+        }
+
+        LocationEntity locationEntity = optionalLocation.get();
+
+        locationEntity.setCity(locationPayload.getCity());
+        locationEntity.setAddress(locationPayload.getAddress());
+        locationEntity.setState(locationPayload.getState());
+
+        Optional<CompanyEntity> optionalCompany =
+                companyRepositry.findById(locationPayload.getCompanyId());
+
+        if (optionalCompany.isEmpty()) {
+            throw new RuntimeException("Company not found");
+        }
+
+        locationEntity.setCompany(optionalCompany.get());
+
+        return locationRepositry.save(locationEntity);
+    }
+
+    @Override
+    public void DeleteLocaionData(long id) {
+        Optional<LocationEntity> byId = locationRepositry.findById(id);
+
+        if (byId.isEmpty()) {
+            throw new RuntimeException("Location not found");
+        }
+        locationRepositry.deleteById(id);
+
+    }
+
+    @Override
+    public List<LocationEntity> readAllLocation() {
+        List<LocationEntity> all = locationRepositry.findAll();
+        return all;
+    }
+
+
 }
