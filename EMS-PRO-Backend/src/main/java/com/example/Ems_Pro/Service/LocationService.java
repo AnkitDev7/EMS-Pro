@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface LocationService {
     LocationEntity saveLocation(LocationPayload locationPayload);
-    LocationEntity updateLocationDetails(long id, LocationPayload locationPayload);
-    void DeleteLocaionData(long id);
+    LocationEntity updateLocationDetails(Integer id, LocationPayload locationPayload);
+    void DeleteLocaionData(Integer id);
     List<LocationEntity> readAllLocation();
 }

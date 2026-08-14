@@ -27,7 +27,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         System.out.println("header"+header);
 
-
         if (header != null && header.startsWith("Bearer ")) {
             // TOKEN PRESENT :- TOKEN CHEACKING HERE....
             String token = header.substring(7);
@@ -41,10 +40,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 List<String> allRoles = jwtGenrator.getRoles(token);
 
+                System.out.println("USERNAME = " + userName);
+                System.out.println("ROLES = " + allRoles);
+
+
                 ArrayList<SimpleGrantedAuthority> arrayList = new ArrayList<>();
                 for (String role : allRoles) {
                     arrayList.add(new SimpleGrantedAuthority(role));
                 }
+
+                System.out.println("AUTHORITY = " + arrayList);
 
                 UsernamePasswordAuthenticationToken up =
                         new UsernamePasswordAuthenticationToken(userName, null, arrayList);

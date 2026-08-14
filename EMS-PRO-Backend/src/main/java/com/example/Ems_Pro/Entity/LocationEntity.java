@@ -16,7 +16,7 @@ public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "location_Id")
-    private Long locationId;
+    private Integer locationId;
 
     @Column(nullable = false,length = 50)
     private String city;

@@ -1,5 +1,4 @@
 package com.example.Ems_Pro.Entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,10 +21,6 @@ public class DepartmentEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_Id", nullable = false)
     private CompanyEntity company;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_Id", nullable = false)
-    private LocationEntity location;
 
     @Column(nullable = false)
     private Boolean active = true;

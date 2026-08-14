@@ -54,7 +54,7 @@ public class LocationServiceIMP implements LocationService {
 
     @PutMapping("/{id}")
     @Override
-    public LocationEntity updateLocationDetails(long id, LocationPayload locationPayload) {
+    public LocationEntity updateLocationDetails(Integer id, LocationPayload locationPayload) {
 
         Optional<LocationEntity> optionalLocation =
                 locationRepositry.findById(id);
@@ -82,7 +82,7 @@ public class LocationServiceIMP implements LocationService {
     }
 
     @Override
-    public void DeleteLocaionData(long id) {
+    public void DeleteLocaionData(Integer id) {
         Optional<LocationEntity> byId = locationRepositry.findById(id);
 
         if (byId.isEmpty()) {

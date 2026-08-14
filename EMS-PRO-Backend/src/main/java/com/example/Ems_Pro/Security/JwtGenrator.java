@@ -20,6 +20,9 @@ public class JwtGenrator {
 
     public String GenerateToken(UserDetails userDetails) {
 
+        System.out.println("USER = " + userDetails.getUsername());
+        System.out.println("AUTHORITIES = " + userDetails.getAuthorities());
+
         List<String> roles = new ArrayList<>();
 
         for( GrantedAuthority grantedAuthority :userDetails.getAuthorities()){

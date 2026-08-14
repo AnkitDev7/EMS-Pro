@@ -1,8 +1,10 @@
 package com.example.Ems_Pro.Payload.Request;
+
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -39,7 +41,7 @@ public class UserPayload {
 
     @NotNull(message = "Role ID is required")
     @Positive(message = "Role ID must be greater than 0")
-    private Long roleId;
+    private String roleId;
 
     @NotBlank(message = "Company ID is required")
     @Size(max = 50, message = "Company ID must not exceed 50 characters")
@@ -47,21 +49,24 @@ public class UserPayload {
 
     @NotNull(message = "Location ID is required")
     @Positive(message = "Location ID must be greater than 0")
-    private Long locationId;
+    private Integer locationId;
 
-    @NotNull(message = "Department ID is required")
     @Positive(message = "Department ID must be greater than 0")
-    private Long departmentId;
+    private String departmentId;
 
+/*
     @Size(max = 50, message = "Manager ID must not exceed 50 characters")
     private String managerId;
 
     @Size(max = 50, message = "Team Leader ID must not exceed 50 characters")
     private String teamLeaderId;
+*/
 
     @Pattern(
             regexp = "ACTIVE|INACTIVE",
             message = "Status must be either ACTIVE or INACTIVE"
     )
     private String status;
+
+    private MultipartFile profileImage;
 }

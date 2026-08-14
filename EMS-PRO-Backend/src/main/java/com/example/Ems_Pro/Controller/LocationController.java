@@ -38,7 +38,7 @@ public class LocationController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<?> updateLocationDetails(@PathVariable long id,
+    public ResponseEntity<?> updateLocationDetails(@PathVariable Integer id,
             @RequestBody LocationPayload locationPayload) {
 
       LocationEntity locationEntity =  locationService.updateLocationDetails(id,locationPayload);
@@ -57,7 +57,7 @@ public class LocationController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLocation(@PathVariable long id) {
+    public ResponseEntity<?> deleteLocation(@PathVariable Integer id) {
         locationService.DeleteLocaionData(id);
         return ResponseEntity.ok("Location deleted successfully");
     }
