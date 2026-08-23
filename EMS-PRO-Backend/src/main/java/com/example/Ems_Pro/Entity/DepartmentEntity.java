@@ -12,17 +12,17 @@ import lombok.NoArgsConstructor;
 public class DepartmentEntity {
 
     @Id
-    @Column(name = "department_Id",nullable = false, unique = true)
+    @Column(name = "department_id", length = 100)
     private String departmentId;
 
-    @Column(nullable = false,unique = true)
+    @Column(name = "department_name", length = 200, nullable = false)
     private String departmentName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_Id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "company_id", nullable = false)
     private CompanyEntity company;
 
-    @Column(nullable = false)
-    private Boolean active = true;
+    @Column(name = "status", length = 15, nullable = false)
+    private String status;
 
 }

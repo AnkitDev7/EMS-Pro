@@ -1,8 +1,5 @@
 package com.example.Ems_Pro.Entity;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,19 +12,19 @@ import lombok.NoArgsConstructor;
 public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_Id")
+    @Column(name = "location_id")
     private Integer locationId;
 
-    @Column(nullable = false,length = 50)
-    private String city;
-
-    @Column(nullable = false,length = 300)
+    @Column(name = "address", length = 500)
     private String address;
 
-    @Column(nullable = false,length = 50)
-    private  String state;
+    @Column(name = "city", length = 100)
+    private String city;
+
+    @Column(name = "state", length = 100)
+    private String state;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_Id", nullable = false)
+    @JoinColumn(name = "company_id")
     private CompanyEntity company;
 }

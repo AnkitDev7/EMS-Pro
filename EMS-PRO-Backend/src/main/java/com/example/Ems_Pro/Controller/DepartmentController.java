@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/departments")
@@ -37,5 +40,19 @@ public class DepartmentController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body("Department not saved successfully");
+    }
+
+    public ResponseEntity<?> updateDepartment(@Valid @RequestBody DepartmentPayload departmentPayload) {
+
+       DepartmentEntity departmentEntity = departmentService.updateDepartment(departmentPayload);
+
+       if (departmentEntity != null) {
+           return  ResponseEntity
+                   .status(HttpStatus.OK)
+                   .body(Map.of("Department Update successfully",departmentEntity)
+                   );
+       }
+
+       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Department not Update successfully");
     }
 }

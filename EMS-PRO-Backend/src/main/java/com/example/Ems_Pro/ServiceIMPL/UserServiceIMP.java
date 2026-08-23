@@ -43,7 +43,7 @@ public class UserServiceIMP implements UserService {
 
     @Override
     @Transactional(rollbackOn =  Exception.class)
-    public UsersEntity createAdmin(UserPayload userPayload, MultipartFile profileImage) {
+    public UsersEntity createUser(UserPayload userPayload, MultipartFile profileImage) {
 
         if (userRepositry.existsByEmail(userPayload.getEmail())) {
 
@@ -106,7 +106,7 @@ public class UserServiceIMP implements UserService {
                 )
         );
 
-        user.setPhone_Number(
+        user.setPhoneNo(
                 userPayload.getPhoneNumber()
         );
 
@@ -124,7 +124,7 @@ public class UserServiceIMP implements UserService {
 
         // Status
         user.setStatus(
-                UsersEntity.Status.ACTIVE
+                userPayload.getStatus()
         );
 
 /*         10. Admin ke liye ye NULL
@@ -137,7 +137,7 @@ public class UserServiceIMP implements UserService {
 
         // Status
         user.setStatus(
-                UsersEntity.Status.ACTIVE
+                userPayload.getStatus()
         );
 
 
@@ -162,7 +162,7 @@ public class UserServiceIMP implements UserService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public void updateAdmin(
+    public void updateUser(
             String id,
             UserPayload userPayload,
             MultipartFile profileImage
@@ -187,7 +187,7 @@ public class UserServiceIMP implements UserService {
         if (userPayload.getPhoneNumber() != null &&
                 !userPayload.getPhoneNumber().isBlank()) {
 
-            admin.setPhone_Number(userPayload.getPhoneNumber());
+            admin.setPhoneNo(userPayload.getPhoneNumber());
         }
 
 

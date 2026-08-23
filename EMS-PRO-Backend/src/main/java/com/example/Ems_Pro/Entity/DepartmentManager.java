@@ -1,32 +1,46 @@
 package com.example.Ems_Pro.Entity;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Data
+@Table(name = "department_manager")
+@IdClass(DepartmentManager.DepartmentManagerId.class)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DepartmentManager {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", nullable = false)
     private DepartmentEntity department;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UsersEntity users;
+    @JoinColumn(name = "user_id", nullable = false)
+    private UsersEntity user;
 
-    private LocalDateTime assignedDate;
+    @Id
+    @Column(name = "assigned_date", nullable = false)
+    private LocalDate assignedDate;
 
-    private Date endDate;
+    @Column(name = "end_date")
+    private LocalDate endDate;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class DepartmentManagerId implements Serializable {
+        private String department; // matches Department PK type (departmentId)
+        private String user;       // matches User PK type (userId)
+        private LocalDate assignedDate;
+    }
 }

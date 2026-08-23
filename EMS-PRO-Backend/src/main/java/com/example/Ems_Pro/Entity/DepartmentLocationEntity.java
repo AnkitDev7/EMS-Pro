@@ -1,28 +1,36 @@
 package com.example.Ems_Pro.Entity;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import java.io.Serializable;
+
 
 @Entity
-@Data
+@Table(name = "department_location")
+@IdClass(DepartmentLocationEntity.DepartmentLocationId.class)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "department_location")
+@Builder
 public class DepartmentLocationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("departmentId")
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", nullable = false)
     private DepartmentEntity department;
 
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-//    @MapsId("locationId")
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private LocationEntity location;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    public static class DepartmentLocationId implements Serializable {
+        private String department;  // matches Department PK type (departmentId)
+        private Integer location;   // matches Location PK type (locationId)
+    }
 }

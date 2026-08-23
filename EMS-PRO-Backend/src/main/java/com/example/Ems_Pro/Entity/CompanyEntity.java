@@ -17,15 +17,18 @@ import lombok.NoArgsConstructor;
 public class CompanyEntity {
 
     @Id
+    @Column(name = "company_id", length = 50)
     private String companyId;
 
-    @Column(nullable = false,unique = true)
+    @Column(name = "company_name", length = 50)
     private String companyName;
 
-    @Email
-    private String email;
+    @Column(name = "company_address", length = 300)
+    private String companyAddress;
 
-    private String phone;
+    @Column(name = "company_email", length = 150)
+    private String companyEmail;
 
-    private String address;
+    @Column(name = "company_phone_no", length = 50)
+    private String companyPhoneNo;
 }

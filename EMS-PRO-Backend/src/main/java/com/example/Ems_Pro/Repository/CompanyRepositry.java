@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CompanyRepositry extends JpaRepository<CompanyEntity, String> {
-    Optional<CompanyEntity> findByEmail(String username);
+    Optional<CompanyEntity> findByCompanyEmail(String username);
 }

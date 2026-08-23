@@ -12,29 +12,22 @@ import tools.jackson.databind.ObjectMapper;
 
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/super_admin/users")
 @PreAuthorize("hasRole('SUPER_ADMIN')")
-public class AdminController {
+public class UsersController {
 
     @Autowired
     private UserService userService;
 
-
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createAdmin(
-            @RequestPart("data")
-            String data,
-
+    public ResponseEntity<?> createUser(
+            @RequestPart("data") String data,
             @RequestPart(
                     value = "profileImage",
                     required = false
-            )
-            MultipartFile profileImage
-
+            ) MultipartFile profileImage
     ) throws Exception {
 
-        // JSON String -> UserPayload
         ObjectMapper objectMapper = new ObjectMapper();
 
         UserPayload userPayload =
@@ -43,35 +36,47 @@ public class AdminController {
                         UserPayload.class
                 );
 
+        UsersEntity user =
+                userService.createUser(
+                        userPayload,
+                        profileImage
+                );
 
-        UsersEntity admin = userService.createAdmin(userPayload, profileImage);
-
-
-        return ResponseEntity.ok("Admin Created Sucessfully");
+        return ResponseEntity
+                .status(201)
+                .body("User Created Successfully");
     }
 
 
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PutMapping(path = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateAdmin(
+    @PutMapping(
+            path = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<?> updateUser(
             @PathVariable String id,
             @RequestPart("data") String data,
             @RequestPart(
                     value = "profileImage",
                     required = false
-            )
-            MultipartFile profileImage
+            ) MultipartFile profileImage
     ) throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        UserPayload userPayload = objectMapper.readValue(
-                data,
-                UserPayload.class
+        UserPayload userPayload =
+                objectMapper.readValue(
+                        data,
+                        UserPayload.class
+                );
+
+        userService.updateUser(
+                id,
+                userPayload,
+                profileImage
         );
 
-        userService.updateAdmin(id,userPayload, profileImage);
-
-        return ResponseEntity.ok("Admin Updated Successfully");
+        return ResponseEntity.ok(
+                "User Updated Successfully"
+        );
     }
 }

@@ -8,12 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface UserService {
-    UsersEntity createAdmin(
+    UsersEntity createUser(
             UserPayload userPayload,
             MultipartFile profileImage
     );
 
-    void updateAdmin(
+    void updateUser(
             String id,
             UserPayload userPayload,
             MultipartFile profileImage

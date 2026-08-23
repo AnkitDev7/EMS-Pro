@@ -1,73 +1,56 @@
 package com.example.Ems_Pro.Entity;
-
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
+
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "`user`")
 public class UsersEntity {
 
     @Id
-    @Column(name = "user_Id")
+    @Column(name = "user_id", length = 100)
     private String userId;
 
-    private String name;
+    @Column(name = "user_created_at")
+    private LocalDateTime userCreatedAt;
 
+    @Column(name = "email", length = 150, nullable = false, unique = true)
     private String email;
 
+    @Column(name = "name", length = 200, nullable = false)
+    private String name;
+
+    @Column(name = "password", length = 200, nullable = false)
     private String password;
 
-    private String phone_Number;
+    @Column(name = "phone_no", length = 50, nullable = false, unique = true)
+    private String phoneNo;
 
-    @Column(name = "profile_image")
-    private String profileImage;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_Id", nullable = false)
-    private RoleEntity role;
+    @Column(name = "status", length = 50, nullable = false)
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_Id")
+    @JoinColumn(name = "company_id")
     private CompanyEntity company;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_Id")
+    @JoinColumn(name = "location_id")
     private LocationEntity location;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_Id")
-    private DepartmentEntity department;
-
-/*    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_Id")
-    private UsersEntity manager;
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_leader_Id")
-    private UsersEntity teamLeader;
-*/
+    @JoinColumn(name = "department_id")
+    private DepartmentEntity department;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Status status = Status.ACTIVE;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    public enum Status {
-        ACTIVE,
-        INACTIVE
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+    @Column(name = "profile_image", length = 200)
+    private String profileImage;
 }

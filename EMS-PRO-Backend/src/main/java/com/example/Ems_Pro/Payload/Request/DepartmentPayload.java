@@ -26,5 +26,5 @@ public class DepartmentPayload {
     private String companyId;
 
     @NotNull(message = "Active status is required")
-    private Boolean active;
+    private String Status;
 }
