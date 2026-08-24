@@ -1,8 +1,9 @@
 package com.example.Ems_Pro.ServiceIMPL;
-
 import com.example.Ems_Pro.Entity.CompanyEntity;
 import com.example.Ems_Pro.Entity.LocationEntity;
+import com.example.Ems_Pro.Entity.UsersEntity;
 import com.example.Ems_Pro.Payload.Request.LocationPayload;
+import com.example.Ems_Pro.Payload.Response.*;
 import com.example.Ems_Pro.Repository.CompanyRepositry;
 import com.example.Ems_Pro.Repository.LocationRepositry;
 import com.example.Ems_Pro.Service.LocationService;
@@ -25,6 +26,56 @@ public class LocationServiceIMP implements LocationService {
 
     @Autowired
     private LocationRepositry locationRepositry;
+
+    private LocationResponse mapToResponse(LocationEntity location) {
+
+        LocationResponse locationResponse = new LocationResponse();
+
+        locationResponse.setLocationId(
+                location.getLocationId()
+        );
+
+        locationResponse.setAddress(
+                location.getAddress()
+        );
+
+        locationResponse.setCity(
+                location.getCity()
+        );
+
+        locationResponse.setState(
+                location.getState()
+        );
+
+        if (location.getCompany() != null) {
+
+            CompanyResponse companyResponse = new CompanyResponse();
+
+            companyResponse.setCompanyId(
+                    location.getCompany().getCompanyId()
+            );
+
+            companyResponse.setCompanyName(
+                    location.getCompany().getCompanyName()
+            );
+
+            companyResponse.setCompanyAddress(
+                    location.getCompany().getCompanyAddress()
+            );
+
+            companyResponse.setCompanyEmail(
+                    location.getCompany().getCompanyEmail()
+            );
+
+            companyResponse.setCompanyPhoneNo(
+                    location.getCompany().getCompanyPhoneNo()
+            );
+
+            locationResponse.setCompany(companyResponse);
+        }
+
+        return locationResponse;
+    }
 
     @Override
     public LocationEntity saveLocation(LocationPayload locationPayload) {
@@ -93,9 +144,15 @@ public class LocationServiceIMP implements LocationService {
     }
 
     @Override
-    public List<LocationEntity> readAllLocation() {
-        List<LocationEntity> all = locationRepositry.findAll();
-        return all;
+    public List<LocationResponse> readAllLocation() {
+        List<LocationEntity> locations = locationRepositry.findAll();
+
+        List<LocationResponse> Listlocations = locations
+                        .stream()
+                        .map(this::mapToResponse)
+                        .toList();
+
+        return Listlocations;
     }
 
 

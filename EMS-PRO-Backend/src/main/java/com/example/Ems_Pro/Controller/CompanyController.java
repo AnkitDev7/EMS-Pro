@@ -4,6 +4,7 @@ import com.example.Ems_Pro.Entity.CompanyEntity;
 import com.example.Ems_Pro.Entity.UsersEntity;
 import com.example.Ems_Pro.Payload.Request.CompanyPayload;
 import com.example.Ems_Pro.Payload.Request.UserPayload;
+import com.example.Ems_Pro.Payload.Response.CompanyResponse;
 import com.example.Ems_Pro.Service.CompanyService;
 import com.example.Ems_Pro.Service.UserService;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -78,5 +80,20 @@ public class CompanyController {
         return ResponseEntity.ok(
                 Map.of("message", "Company deleted successfully")
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllCompany(){
+
+      List<CompanyResponse> companyResponse = companyService.readAllCompany();
+
+      if (companyResponse != null) {
+          return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                  "company", "All Company List",
+                  "companyResponse", companyResponse
+          ));
+      }
+
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found");
     }
 }

@@ -39,8 +39,8 @@ public class UserPayload {
     )
     private String phoneNumber;
 
-    @NotNull(message = "Role ID is required")
-    @Positive(message = "Role ID must be greater than 0")
+    @NotBlank(message = "Role ID is required")
+    @Size(max = 50, message = "Role ID must not exceed 50 characters")
     private String roleId;
 
     @NotBlank(message = "Company ID is required")
@@ -51,7 +51,8 @@ public class UserPayload {
     @Positive(message = "Location ID must be greater than 0")
     private Integer locationId;
 
-    @Positive(message = "Department ID must be greater than 0")
+    @NotBlank(message = "Department ID is required")
+    @Size(max = 100, message = "Department ID must not exceed 100 characters")
     private String departmentId;
 
 /*

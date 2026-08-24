@@ -1,6 +1,7 @@
 package com.example.Ems_Pro.Controller;
 import com.example.Ems_Pro.Entity.RoleEntity;
 import com.example.Ems_Pro.Payload.Request.RolePayload;
+import com.example.Ems_Pro.Payload.Response.RoleResponse;
 import com.example.Ems_Pro.Service.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class RoleController {
     @GetMapping
     public ResponseEntity<?> readAllRoles() {
 
-        List<RoleEntity> roleEntity = roleService.readAllRole();
+        List<RoleResponse> roleEntity = roleService.readAllRole();
 
         if (roleEntity.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of
@@ -73,7 +74,12 @@ public class RoleController {
             );
         }
 
-        return ResponseEntity.ok().body(roleEntity);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of(
+                        "message", "Roles fetched successfully",
+                        "roles", roleEntity
+                ));
     }
 
 

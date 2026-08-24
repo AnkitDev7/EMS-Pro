@@ -2,9 +2,12 @@ package com.example.Ems_Pro.Service;
 
 import com.example.Ems_Pro.Entity.UsersEntity;
 import com.example.Ems_Pro.Payload.Request.UserPayload;
+import com.example.Ems_Pro.Payload.Response.UserResponse;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 public interface UserService {
@@ -18,4 +21,10 @@ public interface UserService {
             UserPayload userPayload,
             MultipartFile profileImage
     );
+
+    UsersEntity deleteSingleUser(String id);
+
+    UserResponse getSingleUser(String id);
+
+    List<UserResponse> getAllUsers();
 }

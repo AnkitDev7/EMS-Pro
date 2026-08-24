@@ -51,8 +51,8 @@ public class DepartmentServiceIMP implements DepartmentService {
                 departmentPayload.getStatus()
         );
 
-        return departmentEntity;
-
+        DepartmentEntity saveDepartment = departmentRepositry.save(departmentEntity);
+        return saveDepartment;
     }
 
     @Override

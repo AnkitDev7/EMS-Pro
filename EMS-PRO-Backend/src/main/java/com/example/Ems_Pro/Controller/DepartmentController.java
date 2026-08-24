@@ -17,13 +17,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/departments")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('SUPER_ADMIN')")
 public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping
     public ResponseEntity<?> createDepartment(
             @Valid @RequestBody DepartmentPayload departmentPayload) {
@@ -42,6 +42,7 @@ public class DepartmentController {
                 .body("Department not saved successfully");
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<?> updateDepartment(@Valid @RequestBody DepartmentPayload departmentPayload) {
 
        DepartmentEntity departmentEntity = departmentService.updateDepartment(departmentPayload);

@@ -25,6 +25,6 @@ public class DepartmentPayload {
     @NotBlank(message = "Company ID is required")
     private String companyId;
 
-    @NotNull(message = "Active status is required")
-    private String Status;
+    @NotBlank(message = "Active status is required")
+    private String status;
 }

@@ -1,14 +1,19 @@
 package com.example.Ems_Pro.Controller;
 import com.example.Ems_Pro.Entity.UsersEntity;
 import com.example.Ems_Pro.Payload.Request.UserPayload;
+import com.example.Ems_Pro.Payload.Response.UserResponse;
 import com.example.Ems_Pro.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
+
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -79,4 +84,51 @@ public class UsersController {
                 "User Updated Successfully"
         );
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSingleUser(@PathVariable String id) {
+
+      UsersEntity usersEntity =  userService.deleteSingleUser(id);
+
+      if (usersEntity != null) {
+          return ResponseEntity.ok("User Deleted Successfully");
+      }
+
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable String id) {
+
+     UserResponse userResponse =  userService.getSingleUser(id);
+
+     if (userResponse != null) {
+         return ResponseEntity.ok(userResponse);
+     }
+     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+
+    }
+
+
+    @GetMapping
+    public ResponseEntity<?> getAllUsers() {
+
+        List<UserResponse> userResponse = userService.getAllUsers();
+
+        if (userResponse != null) {
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of(
+                            "message", "All Users fetched successfully",
+                            "roles", userResponse
+                    ));
+
+        };
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("All Users Not Found");
+    }
+
+
+
 }

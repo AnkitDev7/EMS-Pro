@@ -2,12 +2,14 @@ package com.example.Ems_Pro.ServiceIMPL;
 
 import com.example.Ems_Pro.Entity.CompanyEntity;
 import com.example.Ems_Pro.Payload.Request.CompanyPayload;
+import com.example.Ems_Pro.Payload.Response.CompanyResponse;
 import com.example.Ems_Pro.Repository.CompanyRepositry;
 import com.example.Ems_Pro.Service.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,19 @@ public class CompanyServiceIMP implements CompanyService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    private CompanyResponse mapToCompanyResponse(CompanyEntity company){
+
+        CompanyResponse companyResponse = new CompanyResponse();
+
+        companyResponse.setCompanyId(company.getCompanyId());
+        companyResponse.setCompanyName(company.getCompanyName());
+        companyResponse.setCompanyAddress(company.getCompanyAddress());
+        companyResponse.setCompanyEmail(company.getCompanyEmail());
+        companyResponse.setCompanyPhoneNo(company.getCompanyPhoneNo());
+
+        return companyResponse;
+    }
 
     @Override
     public CompanyEntity createCompany(CompanyPayload companyPayload) {
@@ -66,5 +81,18 @@ public class CompanyServiceIMP implements CompanyService {
                         );
 
         companyRepositry.delete(company);
+    }
+
+    @Override
+    public List<CompanyResponse> readAllCompany() {
+
+        List<CompanyEntity> allCompany = companyRepositry.findAll();
+
+        List<CompanyResponse> allComapnyList = allCompany
+                .stream().
+                map(this::mapToCompanyResponse)
+                .toList();
+
+        return allComapnyList;
     }
 }

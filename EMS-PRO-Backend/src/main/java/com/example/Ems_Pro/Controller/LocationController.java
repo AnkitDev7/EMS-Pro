@@ -1,6 +1,7 @@
 package com.example.Ems_Pro.Controller;
 import com.example.Ems_Pro.Entity.LocationEntity;
 import com.example.Ems_Pro.Payload.Request.LocationPayload;
+import com.example.Ems_Pro.Payload.Response.LocationResponse;
 import com.example.Ems_Pro.Service.LocationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class LocationController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllLocationDetails() {
-       List<LocationEntity> list = locationService.readAllLocation();
+       List<LocationResponse> list = locationService.readAllLocation();
 
        if (list.isEmpty()) {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of

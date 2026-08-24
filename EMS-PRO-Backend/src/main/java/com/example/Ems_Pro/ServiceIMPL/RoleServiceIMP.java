@@ -1,6 +1,7 @@
 package com.example.Ems_Pro.ServiceIMPL;
 import com.example.Ems_Pro.Entity.RoleEntity;
 import com.example.Ems_Pro.Payload.Request.RolePayload;
+import com.example.Ems_Pro.Payload.Response.RoleResponse;
 import com.example.Ems_Pro.Repository.RoleRepositry;
 import com.example.Ems_Pro.Service.RoleService;
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,13 @@ public class RoleServiceIMP implements RoleService {
 
     @Autowired
     private RoleRepositry roleRepositry;
+
+    private RoleResponse mapToRoleResponse(RoleEntity role) {
+        RoleResponse roleResponse = new RoleResponse();
+        roleResponse.setRoleId(role.getRoleId());
+        roleResponse.setRoleName(role.getRoleName());
+        return roleResponse;
+    }
 
     @Override
     public RoleEntity saveRole(RolePayload rolePayload) {
@@ -66,9 +74,15 @@ public class RoleServiceIMP implements RoleService {
     }
 
     @Override
-    public List<RoleEntity> readAllRole() {
+    public List<RoleResponse> readAllRole() {
         List<RoleEntity> allRole = roleRepositry.findAll();
-        return allRole;
+
+        List<RoleResponse> allRoleList = allRole
+                .stream()
+                .map(this::mapToRoleResponse)
+                .toList();
+
+        return allRoleList;
     }
 
 }
