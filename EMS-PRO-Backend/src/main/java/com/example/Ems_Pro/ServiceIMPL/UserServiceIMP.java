@@ -6,7 +6,12 @@ import com.example.Ems_Pro.Repository.*;
 import com.example.Ems_Pro.Service.ImageService;
 import com.example.Ems_Pro.Service.UserService;
 import jakarta.transaction.Transactional;
+import org.modelmapper.internal.util.Lists;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -167,6 +172,22 @@ public class UserServiceIMP implements UserService {
         }
 
         return userResponse;
+    }
+
+    private UsersEntity getCurrentUser() {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String email = authentication.getName();
+
+        return userRepositry
+                .findByEmail(email)
+                .orElseThrow(
+                        () -> new RuntimeException("Current user not found")
+                );
     }
 
     @Override
@@ -708,28 +729,240 @@ public class UserServiceIMP implements UserService {
     @Override
     public UserResponse getSingleUser(String id) {
 
-        UsersEntity user = userRepositry.findById(id)
+        UsersEntity currentUser = getCurrentUser();
+
+        UsersEntity targetUser = userRepositry.findById(id)
                 .orElseThrow(() ->
                         new RuntimeException(
                                 "User not found: " + id
                         )
                 );
 
-        return mapToResponse(user);
+        String currentRoleId = currentUser.getRole().getRoleId();
+
+        if ("ROLE001".equals(currentRoleId)) {
+            return mapToResponse(currentUser);
+        }
+
+        if ("ROLE002".equals(currentRoleId)) {
+
+            boolean sameLocation =
+                    currentUser.getLocation() != null &&
+                            targetUser.getLocation() != null &&
+                            currentUser.getLocation()
+                                    .getLocationId()
+                                    .equals(
+                                            targetUser.getLocation()
+                                                    .getLocationId()
+                                    );
+
+            if (!sameLocation) {
+                throw new RuntimeException(
+                        "You cannot access user from another location"
+                );
+            }
+        }
+
+        return mapToResponse(targetUser);
     }
 
     @Override
     public List<UserResponse> getAllUsers() {
 
-        List<UsersEntity> allListUsers =
-                userRepositry.findAll();
+        UsersEntity currentUser = getCurrentUser();
 
-        List<UserResponse> listAllUsers = allListUsers
+        String roleId = currentUser.getRole().getRoleId();
+
+        List<UsersEntity> users ;
+
+        if ("ROLE001".equals(roleId)) {
+            users = userRepositry.findAll();
+        }
+
+        else if ("ROLE002".equals(roleId)) {
+
+            users =
+                    userRepositry.findByLocation_LocationId(
+                            currentUser.getLocation()
+                                    .getLocationId()
+                    );
+
+        } else if ("ROLE004".equals(roleId)) {
+
+            users = userRepositry.findByLocation_LocationIdAndDepartment_DepartmentIdAndRole_RoleId(
+                    currentUser.getLocation()
+                            .getLocationId(),
+                    currentUser.getDepartment()
+                            .getDepartmentId(),
+                    "ROLE003"
+            );
+        } else if ("ROLE003".equals(roleId)) {
+
+            users = List.of(currentUser);
+            
+        }else {
+            throw new RuntimeException(
+                    "Access denied"
+            );
+        }
+
+        return users
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
 
-        return listAllUsers;
+    @Override
+    public Page<UserResponse> findAllUsers(Pageable pageable) {
+
+        UsersEntity currentUser = getCurrentUser();
+
+        String roleId = currentUser.getRole().getRoleId();
+
+        if ("ROLE001".equals(roleId)) {
+            Page<UsersEntity> allUsers = userRepositry.findAll(pageable);
+            return allUsers.map(this::mapToResponse);
+        }
+
+        if ("ROLE002".equals(roleId)) {
+
+            Page<UsersEntity> users = userRepositry.findByLocation_LocationId(
+                    currentUser.getLocation()
+                            .getLocationId(),
+                    pageable
+            );
+
+            return users.map(this::mapToResponse);
+        }
+
+        if ("ROLE004".equals(roleId)) {
+
+            Page<UsersEntity> users =
+                    userRepositry
+                            .findByLocation_LocationIdAndDepartment_DepartmentIdAndRole_RoleId(
+                                    currentUser
+                                            .getLocation()
+                                            .getLocationId(),
+
+                                    currentUser
+                                            .getDepartment()
+                                            .getDepartmentId(),
+
+                                    "ROLE003",
+
+                                    pageable
+                            );
+
+            return users.map(this::mapToResponse);
+        }
+
+        if ("ROLE003".equals(roleId)) {
+
+            Page<UsersEntity> users =
+                    userRepositry.findByUserId(
+                            currentUser.getUserId(),
+                            pageable
+                    );
+
+            return users.map(this::mapToResponse);
+        }
+
+
+        throw new RuntimeException(
+                "Access denied"
+        );
+
+
+    }
+
+
+    @Override
+    public Page<UserResponse> findAllUsersByRole(
+            String roleId,
+            Pageable pageable) {
+
+        UsersEntity currentUser = getCurrentUser();
+
+        String currentRoleId =
+                currentUser.getRole().getRoleId();
+
+        Page<UsersEntity> users;
+
+
+        // SUPER ADMIN
+        if ("ROLE001".equals(currentRoleId)) {
+
+            users =
+                    userRepositry.findByRole_RoleId(
+                            roleId,
+                            pageable
+                    );
+        }
+
+
+        // ADMIN
+        else if ("ROLE002".equals(currentRoleId)) {
+
+            users =
+                    userRepositry
+                            .findByLocation_LocationIdAndRole_RoleId(
+                                    currentUser.getLocation().getLocationId(),
+                                    roleId,
+                                    pageable
+                            );
+        }
+
+
+        // MANAGER
+        else if ("ROLE004".equals(currentRoleId)) {
+
+            // Manager can only see employees
+            if (!"ROLE003".equals(roleId)) {
+
+                throw new RuntimeException(
+                        "Manager can only access employees"
+                );
+            }
+
+            users =
+                    userRepositry
+                            .findByLocation_LocationIdAndDepartment_DepartmentIdAndRole_RoleId(
+                                    currentUser.getLocation().getLocationId(),
+                                    currentUser.getDepartment().getDepartmentId(),
+                                    "ROLE003",
+                                    pageable
+                            );
+        }
+
+
+        // EMPLOYEE
+        else if ("ROLE003".equals(currentRoleId)) {
+
+            // Employee sirf apne aap ko
+            if (!currentUser.getRole().getRoleId().equals(roleId)) {
+
+                throw new RuntimeException(
+                        "Employee cannot access other roles"
+                );
+            }
+
+            users =
+                    userRepositry.findByUserId(
+                            currentUser.getUserId(),
+                            pageable
+                    );
+        }
+
+
+        else {
+
+            throw new RuntimeException(
+                    "Access denied"
+            );
+        }
+
+
+        return users.map(this::mapToResponse);
     }
 
 
