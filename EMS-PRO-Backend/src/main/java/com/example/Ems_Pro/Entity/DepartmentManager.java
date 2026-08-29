@@ -3,8 +3,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "department_manager")
@@ -26,12 +24,12 @@ public class DepartmentManager {
     @JoinColumn(name = "user_id", nullable = false)
     private UsersEntity user;
 
-    @Id
     @Column(name = "assigned_date", nullable = false)
     private LocalDate assignedDate;
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
 
     @Getter
     @Setter
@@ -39,8 +37,9 @@ public class DepartmentManager {
     @AllArgsConstructor
     @EqualsAndHashCode
     public static class DepartmentManagerId implements Serializable {
-        private String department; // matches Department PK type (departmentId)
-        private String user;       // matches User PK type (userId)
-        private LocalDate assignedDate;
+
+        private String department;
+        private String user;
     }
+
 }

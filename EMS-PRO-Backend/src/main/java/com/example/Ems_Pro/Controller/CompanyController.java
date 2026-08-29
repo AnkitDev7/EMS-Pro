@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-//@RequestMapping("/super_admin")
-//@PreAuthorize("hasRole('SUPER_ADMIN')")
 @RequestMapping("/auth/company")
 public class CompanyController {
 

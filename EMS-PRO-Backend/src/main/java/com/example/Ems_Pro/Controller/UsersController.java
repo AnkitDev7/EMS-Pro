@@ -21,9 +21,12 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UsersController {
 
+
     @Autowired
     private UserService userService;
 
+
+    // CREATE USER
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createUser(
@@ -54,6 +57,7 @@ public class UsersController {
     }
 
 
+    // UPDATE USER
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
     @PutMapping(
             path = "/{id}",
@@ -87,33 +91,38 @@ public class UsersController {
         );
     }
 
+
+    // DELETE SINGLE USER
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSingleUser(@PathVariable String id) {
 
-      UsersEntity usersEntity =  userService.deleteSingleUser(id);
+        UsersEntity usersEntity = userService.deleteSingleUser(id);
 
-      if (usersEntity != null) {
-          return ResponseEntity.ok("User Deleted Successfully");
-      }
+        if (usersEntity != null) {
+            return ResponseEntity.ok("User Deleted Successfully");
+        }
 
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
     }
 
+
+    // GET SINGLE USER
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<?> getSingleUser(@PathVariable String id) {
 
-     UserResponse userResponse =  userService.getSingleUser(id);
+        UserResponse userResponse = userService.getSingleUser(id);
 
-     if (userResponse != null) {
-         return ResponseEntity.ok(userResponse);
-     }
-     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
+        if (userResponse != null) {
+            return ResponseEntity.ok(userResponse);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User Not Found");
 
     }
 
 
+    // GET ALL USERS
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE')")
     @GetMapping("/allUsers")
     public ResponseEntity<?> getAllUsers() {
@@ -129,11 +138,14 @@ public class UsersController {
                             "roles", userResponse
                     ));
 
-        };
+        }
+        ;
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("All Users Not Found");
     }
 
+
+    // FIND USER BY PAGINATION
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<?> findAllUsersByPagination(Pageable pageable) {
@@ -150,6 +162,7 @@ public class UsersController {
     }
 
 
+    // FIND ALL USERS
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MANAGER', 'EMPLOYEE')")
     @GetMapping("/roleBased")
     public ResponseEntity<?> findAllUsers(
@@ -180,8 +193,6 @@ public class UsersController {
                 )
         );
     }
-
-
 
 
 }

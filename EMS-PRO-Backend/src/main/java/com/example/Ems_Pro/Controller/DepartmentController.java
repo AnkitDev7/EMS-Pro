@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,6 +41,7 @@ public class DepartmentController {
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PutMapping
     public ResponseEntity<?> updateDepartment(@Valid @RequestBody DepartmentPayload departmentPayload) {
 
        DepartmentEntity departmentEntity = departmentService.updateDepartment(departmentPayload);
@@ -55,5 +54,39 @@ public class DepartmentController {
        }
 
        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Department not Update successfully");
+    }
+
+    @DeleteMapping("/{departmentId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> singleDeleteDepartment(@PathVariable String  departmentId) {
+
+        DepartmentEntity departmentEntity = departmentService.deleteSingleDepartment(departmentId);
+
+        if (departmentEntity != null) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of("Message",
+                            "Department deleted successfully")
+                    );
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Department Not Found");
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<?> readAllDepartments() {
+
+        List<DepartmentEntity> departmentEntity = departmentService.readAllDepartment();
+
+        if (departmentEntity != null) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of("Message : ","Departments read successfully",
+                            "Department List : ",departmentEntity
+                    ));
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Department Not Found");
     }
 }

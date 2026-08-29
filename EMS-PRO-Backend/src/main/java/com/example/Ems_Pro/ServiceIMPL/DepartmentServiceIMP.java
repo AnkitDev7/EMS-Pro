@@ -1,13 +1,18 @@
 package com.example.Ems_Pro.ServiceIMPL;
 import com.example.Ems_Pro.Entity.*;
 import com.example.Ems_Pro.Payload.Request.DepartmentPayload;
+import com.example.Ems_Pro.Payload.Response.DepartmentResponse;
 import com.example.Ems_Pro.Repository.*;
 import com.example.Ems_Pro.Service.DepartmentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -22,6 +27,9 @@ public class DepartmentServiceIMP implements DepartmentService {
 
     @Autowired
     private DepartmentRepositry departmentRepositry;
+
+    @Autowired
+    private UserRepositry userRepositry;
 
     @Override
     public DepartmentEntity createDepartment(DepartmentPayload departmentPayload) {
@@ -91,5 +99,28 @@ public class DepartmentServiceIMP implements DepartmentService {
         );
 
         return departmentEntity;
+    }
+
+    @Override
+    public DepartmentEntity deleteSingleDepartment(String departmentId) {
+
+        Optional<DepartmentEntity> byId = departmentRepositry.findById(departmentId);
+
+        DepartmentEntity departmentEntity = byId.get();
+
+        if (departmentEntity != null){
+            departmentRepositry.delete(departmentEntity);
+            return departmentEntity;
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Department Not Found");
+    }
+
+    @Override
+    public List<DepartmentEntity> readAllDepartment() {
+
+        List<DepartmentEntity> allDepartment = departmentRepositry.findAll();
+
+        return allDepartment;
     }
 }
